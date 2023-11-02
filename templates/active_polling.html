@@ -34,7 +34,7 @@
                 <div class="mb-2">
 
                     <ul class="list-group" id="choice_listing">
-                        <li class="list-group-item">An item</li>
+                        
                     </ul>
                 
                 </div>
@@ -45,6 +45,47 @@
 
         </div>
 
+
+        {% comment %} list out all active polls {% endcomment %}
+        
+        <div class="card my-3">
+
+            {% comment %} hading of active poll {% endcomment %}
+            <div class="card-header">
+              <div class="row">
+                <div class="col-9">
+                    <span class="d-inline border border-primary rounded-circle">H</span>
+                    <p class="d-inline">Rashid@gmail.com</p>
+                </div>
+
+                <div class="col-3">
+                    <p class="m-0">Posted on: </p>
+                    <p class="m-0">Ends in: </p>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="card-body">
+                <p class="card-text">Question paste here</p>
+                
+
+                {% comment %} iterate whole below div for choices{% endcomment %}
+                <div class="my-2 ">
+                    <a class="choiceoption" role="button" data-id="10">
+                        <div class="d-flex justify-content-between">
+                            <label for="choice" class="">Choice</label>
+                            <p class="d-inline">Vote count: 24</p>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuemin="0" aria-valuemax="100">50%</div>
+                        </div>
+                    </a>
+                </div>
+                
+
+            </div>
+        </div>
 
     </div>
 
@@ -69,8 +110,8 @@
             li.appendChild(document.createTextNode(choice))
             li.setAttribute("class", "list-group-item")
             ul.appendChild(li)
-            
         })
+
 
         {% comment %} submit handler for creating new poll {% endcomment %}
         $("#submit_poll").on("click", ()=> {
@@ -80,8 +121,18 @@
             var data = {question: question, choice_list:choice_list, csrfmiddlewaretoken: '{{ csrf_token }}'}
             
             //call ajax
+
+        })
+
+
+        {% comment %} voting handler {% endcomment %}
+        $(".choiceoption").click(function(event){
+            console.log("click")
+            var choice_id = $(this).data('id')
             
         })
+        
+
 
     </script>
 
