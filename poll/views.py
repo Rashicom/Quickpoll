@@ -167,7 +167,7 @@ class Home(View):
                     "vote_count":choice.vote_count,
                     "percent":percent
                 })
-                
+
             poll_list.append(new_poll)
         
         return render(request, self.templet,{"poll_list":poll_list})    
@@ -227,3 +227,52 @@ class AddPoll(View):
             print(e)
             return JsonResponse({"status":400, "message":"invalied data"})
         return JsonResponse({"status":201, "message":"created"})
+
+
+
+class Vote(View):
+
+    form_class = forms.VotingForm
+
+
+    @method_decorator(login_required(login_url="login"))
+    @transaction.atomic
+    def post(self, request):
+        """
+        accept : poll_id, pollchoice_id
+        record a voating and return json response
+        """
+
+        # validate form
+        voting_form = self.form_class(request.POST)
+        if not voting_form.is_valid():
+            return JsonResponse({"status":400, "message":"Invalied data"})
+        
+
+        try:
+            user = request.user
+            poll_id = voting_form.cleaned_data.get('poll_id')
+            pollchoice_id = voting_form.cleaned_data.get('pollchoice_id')
+
+            # increase count of votes
+            poll_instance = Polls.objects.get(poll_id=poll_id)
+            poll_instance.total_vote_count += 1
+            
+            pollchoice_instance = PollChoices.objects.get(pollchoice_id=pollchoice_id)
+            pollchoice_instance.vote_count += 1
+            
+            VotingList.objects.create(
+                user = user,
+                poll_id = poll_instance,
+                pollchoice_id = pollchoice_instance
+            )
+
+            poll_instance.save()
+            pollchoice_instance.save()
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({"status":200, "message":"Response already recorded"})
+
+        return JsonResponse({"status":201, "message":"Response successfully recorded"})
+

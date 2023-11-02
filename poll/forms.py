@@ -18,3 +18,8 @@ class PollsForm(forms.Form):
     close_on = forms.DateField()    
 
     
+
+class VotingForm(forms.Form):
+    poll_id = forms.IntegerField()
+    pollchoice_id = forms.IntegerField()
+    
