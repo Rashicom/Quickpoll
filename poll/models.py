@@ -63,6 +63,10 @@ class Polls(models.Model):
     close_on = models.DateField()
     total_vote_count = models.IntegerField(default=0)
 
+    class Meta:
+        # last added item apperes in first
+        ordering = ['-poll_id']
+
 
 # table for choices
 # polls can have multiple choices

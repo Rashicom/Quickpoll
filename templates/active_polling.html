@@ -5,7 +5,6 @@
 {% endblock loginlogoutbtn %}
 
 {% block homecontent %}
-
     <div class="container pt-3">
         
         {% comment %} New polling creaton section {% endcomment %}
@@ -51,61 +50,52 @@
             </div>
 
         </div>
-
+        
 
         {% comment %} list out all active polls {% endcomment %}
-        
-        <div class="card my-3">
+        {% for poll in poll_list %}
+            <div class="card my-3">
 
-            {% comment %} hading of active poll {% endcomment %}
-            <div class="card-header">
-              <div class="row">
-                <div class="col-9">
-                    <span class="d-inline border border-primary rounded-circle">H</span>
-                    <p class="d-inline">Rashid@gmail.com</p>
+                {% comment %} hading of active poll {% endcomment %}
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col-9">
+                        <span class="d-inline border border-primary rounded-circle">H</span>
+                        <p class="d-inline">{{poll.user}}</p>
+                    </div>
+
+                    <div class="col-3">
+                        <p class="m-0">Posted on: {{poll.published_on}}</p>
+                        <p class="m-0">Ends in: {{poll.close_on}}</p>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="col-3">
-                    <p class="m-0">Posted on: </p>
-                    <p class="m-0">Ends in: </p>
-                </div>
-              </div>
+
+                <div class="card-body">
+                    <h5 class="card-text">{{poll.poll_question}}</h5>
+
+
+                    {% comment %} iterate whole below div for choices{% endcomment %}
+                    {% for choice in poll.choice %}
+                        <div class="my-2 ">
+                            <a class="choiceoption" role="button" data-id="{{choice.pollchoice_id}}" data-poll="{{poll.poll_id}}" >
+                                <div class="d-flex justify-content-between">
+                                    <label for="choice" class="">{{choice.choice_discription}}</label>
+                                    <p class="d-inline">Vote count: {{choice.vote_count}}</p>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: {{choice.percent}}%;" aria-valuemin="0" aria-valuemax="100">50%</div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+
+
+                </div>     
             </div>
 
-
-            <div class="card-body">
-                <p class="card-text">Question paste here</p>
-                
-
-                {% comment %} iterate whole below div for choices{% endcomment %}
-                <div class="my-2 ">
-                    <a class="choiceoption" role="button" data-id="1" data-poll="20" >
-                        <div class="d-flex justify-content-between">
-                            <label for="choice" class="">Choice</label>
-                            <p class="d-inline">Vote count: 24</p>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuemin="0" aria-valuemax="100">50%</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="my-2 ">
-                    <a class="choiceoption" role="button" data-id="2" data-poll="20" >
-                        <div class="d-flex justify-content-between">
-                            <label for="choice" class="">Choice</label>
-                            <p class="d-inline">Vote count: 24</p>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuemin="0" aria-valuemax="100">50%</div>
-                        </div>
-                    </a>
-                </div>
-                
-
-            </div>     
-        </div>
-
+        {% endfor %}
 
 
 

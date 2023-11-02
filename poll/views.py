@@ -7,6 +7,8 @@ from django.views import View
 from . import forms
 from . models import CustomUser, Polls, PollChoices, VotingList
 from django.db import transaction
+from datetime import datetime
+import pytz
 
 # Create your views here.
 
@@ -125,6 +127,7 @@ class UserLogout(View):
 class Home(View):
 
     templet = "active_polling.html"
+    time_zone = pytz.timezone('Asia/Kolkata')
 
     @method_decorator(login_required(login_url="login"))
     def get(self, request):
@@ -134,7 +137,40 @@ class Home(View):
        
         anouthenticated action trigger the redirection to login page
         """
-        return render(request, self.templet)    
+
+
+        date_now = datetime.now(self.time_zone).date()
+        polls = Polls.objects.filter(close_on__gte = date_now).prefetch_related('poll_choice_set')
+        poll_list = []
+        for poll in polls:
+            new_poll = {
+                "user":poll.user,
+                "poll_id": poll.poll_id,
+                "poll_question": poll.poll_question,
+                "published_on":poll.published_on,
+                "close_on":poll.close_on,
+                "total_vote_count":poll.total_vote_count,
+                "choice":[]
+            }
+
+            for choice in poll.poll_choice_set.all():
+
+                # calculate percent
+                try:
+                    percent = (100/poll.total_vote_count) * choice.vote_count
+                except Exception as e:
+                    percent = 0
+
+                new_poll["choice"].append({
+                    "pollchoice_id":choice.pollchoice_id,
+                    "choice_discription":choice.choice_discription,
+                    "vote_count":choice.vote_count,
+                    "percent":percent
+                })
+                
+            poll_list.append(new_poll)
+        
+        return render(request, self.templet,{"poll_list":poll_list})    
 
 
 
