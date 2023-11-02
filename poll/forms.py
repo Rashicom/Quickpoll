@@ -1,0 +1,13 @@
+from django import forms
+from .models import CustomUser, Polls, PollChoices, VotingList
+
+
+class UserLoginForm(forms.Form):
+    email = forms.EmailField(required=True)
+    password = forms.Field(required=True)
+
+
+class SignupForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'first_name', 'password']
