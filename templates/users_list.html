@@ -1,0 +1,51 @@
+{% extends "admin_base.html" %}
+            
+{% block homecontent %}
+
+    <div class="container mt-3">
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">Email</th>
+                <th scope="col">Name</th>
+                <th scope="col">activate/deactivate</th>
+              </tr>
+            </thead>
+            <tbody>
+            
+            {% for user in user_list %}
+              <tr>
+                <th scope="row">{{user.id}}</th>
+                <td>{{user.email}}</td>
+                <td>{{user.first_name}}</td>
+                <td>
+                    {% if user.is_active %}
+                        <a role="button" href="{% url "alter_user_status" user.id %}"  class="btn btn-danger">Deactivate</a>
+                    {% else %}
+                        <a role="button" href="{% url "alter_user_status" user.id %}"  class="btn btn-success">Activate</a>
+                    {% endif %}
+
+                </td>
+              </tr>
+            {% endfor %}
+              
+            </tbody>
+          </table>
+
+    </div>
+
+    <footer class="fixed-bottom bg-light text-center text-lg-start">
+        <!-- Copyright -->
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+          © 2023 Copyright:
+          <a class="text-dark" href="https://mdbootstrap.com/">Quickpoll.com</a>
+        </div>
+        <!-- Copyright -->
+    </footer>
+
+ 
+
+
+{% endblock homecontent %}

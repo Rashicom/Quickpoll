@@ -1,0 +1,61 @@
+{% extends "admin_base.html" %}
+            
+{% block homecontent %}
+
+    <Section>
+
+        <div class="row container-fluid mt-3">
+            
+            <div class="col-6">
+                <h1>Admin Login !!</h1>
+                <p>Login using your Username and Password.</p>
+            </div>
+
+            <div class="col-6 p-5 rounded-2 bg-dark bg-opacity-50">
+                <h3>Login</h3>
+                <hr>
+                <br>
+                <form method="POST">
+                {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Email address</label>
+                      <input type="email" class="form-control bg-transparent" name = "email" id="email" aria-describedby="emailHelp">
+                      
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label">Password</label>
+                      <input type="password" class="form-control bg-transparent" name="password" id="password">
+                    </div>
+                    
+                    <br>
+                    {% if messages %}
+                    {% for info in messages %}
+                    <p class="text-danger">{{info}}</p>
+                    {% endfor %}
+                    {% endif %}
+                    <div class="d-grid gap-2 userloginbtn">
+                        <button class="btn login_btn" id="loginbtn" type="submit">SUBMIT</button>
+                    </div>
+                    
+                    
+                </form>
+                
+                
+
+            </div>
+        </div>
+
+    </Section>
+
+    <footer class="fixed-bottom bg-light text-center text-lg-start">
+        <!-- Copyright -->
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+          © 2023 Copyright:
+          <a class="text-dark" href="https://mdbootstrap.com/">Quickpoll.com</a>
+        </div>
+        <!-- Copyright -->
+    </footer>
+
+
+{% endblock homecontent %}
