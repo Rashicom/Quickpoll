@@ -6,6 +6,8 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from . import forms
 from poll.models import CustomUser, Polls, PollChoices, VotingList
+import pytz
+from datetime import datetime
 
 # Create your views here.
 
@@ -77,6 +79,8 @@ class UserManagement(View):
         return render(request,self.templet,{"user_list":user_list})
 
 
+
+
 # logout user
 class AdminUserLogout(View):
    
@@ -88,6 +92,8 @@ class AdminUserLogout(View):
         # logout and redirect to login page
         logout(request)
         return redirect('login')
+
+
 
 
 
@@ -115,3 +121,34 @@ class AlterUserStatus(View):
             return redirect("user_list")
         
         return redirect("user_list")
+
+
+
+
+class ManageActivePolls(View):
+
+    templet = "admin_active_polls.html"
+    time_zone = pytz.timezone('Asia/Kolkata')
+
+    def get(self, request):
+
+        date_now = datetime.now(self.time_zone).date()
+        polls = Polls.objects.filter(close_on__gte = date_now).order_by("poll_id")
+
+        return render(request, self.templet, {"poll_list": polls})
+    
+
+class DeletePoll(View):
+
+    def get(self, request, poll_id):
+        """
+        accept : poll_id
+        this metod delete a poll
+        """
+        try:
+            poll = Polls.objects.get(poll_id=poll_id)
+            poll.delete()
+        except Exception as e:
+            print(e)
+        
+        return redirect("polls_list")

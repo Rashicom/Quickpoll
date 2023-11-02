@@ -1,0 +1,51 @@
+{% extends "admin_base.html" %}
+            
+{% block homecontent %}
+
+    <div class="container mt-3">
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">user</th>
+                <th scope="col">poll Question</th>
+                <th scope="col">published on</th>
+                <th scope="col">close on</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+            
+            {% for poll in poll_list %}
+              <tr>
+                <th scope="row">{{poll.poll_id}}</th>
+                <td>{{poll.user}}</td>
+                <td>{{poll.poll_question}}</td>
+                <td>{{poll.published_on}}</td>
+                <td>{{poll.close_on}}</td>
+
+                <td>
+                    <a role="button" href="{% url "delete_poll" poll.poll_id %}"  class="btn btn-danger">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+              
+            </tbody>
+          </table>
+
+    </div>
+
+    <footer class="fixed-bottom bg-light text-center text-lg-start">
+        <!-- Copyright -->
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+          © 2023 Copyright:
+          <a class="text-dark" href="https://mdbootstrap.com/">Quickpoll.com</a>
+        </div>
+        <!-- Copyright -->
+    </footer>
+
+ 
+
+
+{% endblock homecontent %}
