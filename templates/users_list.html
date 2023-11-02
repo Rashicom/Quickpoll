@@ -1,5 +1,9 @@
 {% extends "admin_base.html" %}
-            
+
+{% block loginlogoutbtn %}
+    <a class="btn btn-outline-success" href="{% url "admin_logout" %}" role="button">Signout</a>
+{% endblock loginlogoutbtn %}
+
 {% block homecontent %}
 
     <div class="container mt-3">

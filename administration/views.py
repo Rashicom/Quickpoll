@@ -91,7 +91,7 @@ class AdminUserLogout(View):
 
         # logout and redirect to login page
         logout(request)
-        return redirect('login')
+        return redirect('admin_login')
 
 
 
@@ -152,3 +152,34 @@ class DeletePoll(View):
             print(e)
         
         return redirect("polls_list")
+
+
+
+class ManageClosedPolls(View):
+
+    templet = "admin_closed_polls.html"
+    time_zone = pytz.timezone('Asia/Kolkata')
+
+    def get(self, request):
+
+        date_now = datetime.now(self.time_zone).date()
+        polls = Polls.objects.filter(close_on__lt = date_now).order_by("poll_id")
+        print(polls)
+        return render(request, self.templet, {"poll_list": polls})
+
+
+
+class DeleteClosedPoll(View):
+
+    def get(self, request, poll_id):
+        """
+        accept : poll_id
+        this metod delete a poll
+        """
+        try:
+            poll = Polls.objects.get(poll_id=poll_id)
+            poll.delete()
+        except Exception as e:
+            print(e)
+        
+        return redirect("closed_poll_list")
