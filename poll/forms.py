@@ -11,3 +11,10 @@ class SignupForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['email', 'first_name', 'password']
+
+
+class PollsForm(forms.Form):
+    poll_question = forms.CharField()
+    close_on = forms.DateField()    
+
+    
