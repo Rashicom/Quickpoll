@@ -1,0 +1,61 @@
+{% extends "home.html" %}
+
+
+{% block homecontent %}
+
+    <Section>
+
+        <div class="row container-fluid mt-3">
+            
+            <div class="col-6">
+                <h1>Sign up</h1>
+                <p>Signup using your Username and Password.</p>
+            </div>
+
+            <div class="col-6 p-5 rounded-2 bg-dark bg-opacity-50">
+                <h3>Sign up</h3>
+                <hr>
+                <br>
+                <form method="POST">
+                {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Email address</label>
+                      <input type="email" class="form-control bg-transparent" name = "email" id="email" aria-describedby="emailHelp">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Name</label>
+                        <input type="email" class="form-control bg-transparent" name = "name" id="name" aria-describedby="emailHelp">
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label">Password</label>
+                      <input type="password" class="form-control bg-transparent" name="password" id="password">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control bg-transparent" name="password2" id="password2">
+                    </div>
+                    
+                    <br>
+                    {% if messages %}
+                    {% for info in messages %}
+                    <p class="text-danger">{{info}}</p>
+                    {% endfor %}
+                    {% endif %}
+                    <div class="d-grid gap-2 userloginbtn">
+                        <button class="btn login_btn" id="signupbtn" type="submit">SUBMIT</button>
+                    </div>
+                    
+                    
+                </form>
+                
+                
+
+            </div>
+        </div>
+
+    </Section>
+
+{% endblock homecontent %}

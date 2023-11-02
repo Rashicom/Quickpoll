@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block homecontent %}
+
+    <div class="container pt-3">
+        
+        {% comment %} New polling creaton section {% endcomment %}
+        <div class="card">
+
+            <h5 class="card-header">Create a poll</h5>
+            <div class="card-body">
+              <h5 class="card-title">Do you want to ask for for a public openion</h5>
+              <p class="card-text">Quick poll will helps you to know the pubic openion on anything and gives you insight</p>
+                
+              <form method="POST">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Ask a Question</label>
+                  <input type="text" class="form-control" id="question" aria-describedby="emailHelp">
+                </div>
+                
+                {% comment %} add choices {% endcomment %}
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Add choices</label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="text" class="form-control" id="choice" aria-describedby="emailHelp">
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary" id="add_choice_btn" >Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-2">
+
+                    <ul class="list-group" id="choice_listing">
+                        <li class="list-group-item">An item</li>
+                    </ul>
+                
+                </div>
+                <button type="button" class="btn btn-primary" id="submit_poll" >Submit</button>
+              </form>
+            
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <script>
+
+        {% comment %} listening for add choice button click {% endcomment %}
+        let choice_list = []
+        $("#add_choice_btn").on('click', ()=>{
+
+            //fetch value from input field and push to choice list and empty the input field
+            var choice = $("#choice").val()
+            if(!choice) {
+                console.log("empty")
+                return
+            }
+            choice_list.push(choice)
+            $("#choice").val("")
+
+            //list out newly added choice
+            var ul = document.getElementById("choice_listing")
+            var li = document.createElement("li")
+            li.appendChild(document.createTextNode(choice))
+            li.setAttribute("class", "list-group-item")
+            ul.appendChild(li)
+            
+        })
+
+        {% comment %} submit handler for creating new poll {% endcomment %}
+        $("#submit_poll").on("click", ()=> {
+            
+            //fetch required values and make a data to send
+            var question = $("#question").val()
+            var data = {question: question, choice_list:choice_list, csrfmiddlewaretoken: '{{ csrf_token }}'}
+            
+            //call ajax
+            
+        })
+
+    </script>
+
+{% endblock homecontent %}
