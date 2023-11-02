@@ -106,6 +106,23 @@ class Home(View):
     templet = "active_polling.html"
 
     def get(self, request):
+        """
+        home page contains active pollings which can see both 
+        authenticated and non authenticated users
+       
+        anouthenticated action trigger the redirection to login page
+        """
         return render(request, self.templet)    
 
+
+
+class Results(View):
+
+    templet = "results.html"
+
+    @method_decorator(login_required(login_url="login"))
+    def get(self, request):
+
+        return render(request,self.templet)
+        
 
