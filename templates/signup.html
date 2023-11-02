@@ -1,5 +1,8 @@
 {% extends "home.html" %}
 
+{% block loginlogoutbtn %}
+    <a class="btn btn-outline-success" href="{% url "login" %}" role="button">Login</a>
+{% endblock loginlogoutbtn %}
 
 {% block homecontent %}
 

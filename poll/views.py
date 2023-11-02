@@ -19,7 +19,7 @@ class UserLogin(View):
         this method validating login credencials using
         login form, then authenticate user
         """
-        
+
         # creating form using data
         login_form = self.form_class(request.POST)
 
@@ -58,6 +58,11 @@ class UserLogin(View):
             return render(request, templet, message)
 
     def get(self,request):
+
+        # if user is already authenticated redirect to the polling page
+        if request.user.is_authenticated:
+            return redirect("active_polling")
+        
         return render(request,self.templet)
 
 
@@ -132,7 +137,7 @@ class Home(View):
 
 class Results(View):
 
-    templet = "results.html"
+    templet = "closed_polling.html"
 
     @method_decorator(login_required(login_url="login"))
     def get(self, request):

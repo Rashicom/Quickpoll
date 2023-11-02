@@ -27,7 +27,7 @@
     
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Quick poll</a>
+      <a class="navbar-brand" href="{% url "active_polling" %}">Quick poll</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -39,16 +39,16 @@
             <a class="nav-link active" aria-current="page" href="#">My pollings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Active pollings</a>
+            <a class="nav-link active" aria-current="page" href="{% url "active_polling" %}">Active pollings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Closed pollings</a>
+            <a class="nav-link active" aria-current="page" href="{% url "closed_polling" %}">Closed pollings</a>
           </li>
          
         </ul>
 
         <form class="d-flex">
-          <button class="btn btn-outline-success" type="submit">Logout</button>
+          {% block loginlogoutbtn %}{% endblock loginlogoutbtn %}
         </form>
       </div>
     </div>
