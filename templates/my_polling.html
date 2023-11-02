@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block loginlogoutbtn %}
+    <a class="btn btn-outline-success" href="{% url "logout" %}" role="button">Signout</a>
+{% endblock loginlogoutbtn %}
+
+{% block homecontent %}
+    
+    <div class="container pt-3">
+        
+        {% comment %} New polling creaton section {% endcomment %}
+        <div class="card">
+
+            <h5 class="card-header">Create a poll</h5>
+            <div class="card-body">
+              <h5 class="card-title">Do you want to ask for for a public openion</h5>
+              <p class="card-text">Quick poll will helps you to know the pubic openion on anything and gives you insight</p>
+                
+              <form method="POST">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Ask a Question</label>
+                  <input type="text" class="form-control" id="question" aria-describedby="emailHelp">
+
+                  <label for="exampleInputEmail1" class="form-label">End On</label>
+                  <input type="date" class="form-control" id="end_date" aria-describedby="emailHelp">
+                </div>
+                
+                {% comment %} add choices {% endcomment %}
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Add choices</label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="text" class="form-control" id="choice" aria-describedby="emailHelp">
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary" id="add_choice_btn" >Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-2">
+
+                    <ul class="list-group" id="choice_listing">
+                        
+                    </ul>
+                
+                </div>
+                <button type="button" class="btn btn-primary" id="submit_poll" >Submit</button>
+              </form>
+            
+            </div>
+
+        </div>
+        
+        <h3>My active pollings</h3>
+        <hr>
+        {% comment %} list out all active polls {% endcomment %}
+        {% for poll in poll_list %}
+            <div class="card my-3">
+
+                {% comment %} hading of active poll {% endcomment %}
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col-9">
+                        <span class="d-inline border border-primary rounded-circle">H</span>
+                        <p class="d-inline">{{poll.user}}</p>
+                    </div>
+
+                    <div class="col-3">
+                        <p class="m-0">Posted on: {{poll.published_on}}</p>
+                        <p class="m-0">Ends in: {{poll.close_on}}</p>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="card-body">
+                    <h5 class="card-text">{{poll.poll_question}}</h5>
+
+
+                    {% comment %} iterate whole below div for choices{% endcomment %}
+                    {% for choice in poll.choice %}
+                        <div class="my-2 ">
+                            <a class="choiceoption" role="button" data-id="{{choice.pollchoice_id}}" data-poll="{{poll.poll_id}}" >
+                                <div class="d-flex justify-content-between">
+                                    <label for="choice" class="">{{choice.choice_discription}}</label>
+                                    <p class="d-inline">Vote count: {{choice.vote_count}}</p>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: {{choice.percent}}%;" aria-valuemin="0" aria-valuemax="100">50%</div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+
+
+                </div>     
+            </div>
+
+        {% endfor %}
+
+        <h3>My closed pollings</h3>
+        <hr>
+
+        {% for poll in my_poll_list %}
+          <div class="card my-3">
+
+              {% comment %} hading of active poll {% endcomment %}
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-9">
+                      <span class="d-inline border border-primary rounded-circle">H</span>
+                      <p class="d-inline">{{poll.user}}</p>
+                  </div>
+
+                  <div class="col-3">
+                      <p class="m-0">Posted on: {{poll.published_on}}</p>
+                      <p class="m-0">Ended on: {{poll.close_on}}</p>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="card-body">
+                  <h5 class="card-text">{{poll.poll_question}}</h5>
+
+
+                  {% comment %} iterate whole below div for choices{% endcomment %}
+                  <div class="w-50">
+                    <canvas id="myChart{{poll.poll_id}}"></canvas>
+                  </div>
+
+              </div>     
+          </div>
+        {% endfor %}
+
+
+
+    </div>
+
+    <script>
+
+        {% comment %} listening for add choice button click {% endcomment %}
+        let choice_list = []
+        $("#add_choice_btn").on('click', ()=>{
+
+            //fetch value from input field and push to choice list and empty the input field
+            var choice = $("#choice").val()
+            if(!choice) {
+                console.log("empty")
+                return
+            }
+            choice_list.push(choice)
+            $("#choice").val("")
+
+            //list out newly added choice
+            var ul = document.getElementById("choice_listing")
+            var li = document.createElement("li")
+            li.appendChild(document.createTextNode(choice))
+            li.setAttribute("class", "list-group-item")
+            ul.appendChild(li)
+        })
+
+
+        {% comment %} submit handler for creating new poll {% endcomment %}
+        $("#submit_poll").on("click", ()=> {
+            
+            //fetch required values and make a data to send
+            var question = $("#question").val()
+            var end_date = $("#end_date").val()
+            var data = {poll_question:question, close_on:end_date, choice_list:choice_list, csrfmiddlewaretoken: '{{ csrf_token }}'}
+            
+            //call ajax
+            $.ajax({
+                url: "{% url "add_poll" %}",
+                method: "POST",
+                data:data,
+                success: (data)=>{
+                    console.log(data)
+                    if (data.status == 201){
+                        window.location.href = "{% url "active_polling" %}"
+                    }
+                    else{
+                        toastr.warning(data.message,{timeOut: 500})
+                    }
+                }
+            })
+
+        })
+
+
+        {% for poll in my_poll_list %}
+        const ctx{{poll.poll_id}} = document.getElementById('myChart{{poll.poll_id}}');
+        new Chart(ctx{{poll.poll_id}}, {
+          type: 'bar',
+          data: {
+            labels: [{% for choice in poll.choice %} '{{choice.choice_discription}}', {% endfor %}],
+            datasets: [{
+              label: '# of Votes',
+              data: [{% for choice in poll.choice %} {{choice.vote_count}}, {% endfor %}],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      {% endfor %}
+        
+
+
+    </script>
+
+{% endblock homecontent %}

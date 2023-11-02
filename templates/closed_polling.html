@@ -9,35 +9,37 @@
     <div class="container pt-3">
         {% comment %} list out all active polls {% endcomment %}
         
-        <div class="card my-3">
+        {% for poll in poll_list %}
+          <div class="card my-3">
 
-            {% comment %} hading of active poll {% endcomment %}
-            <div class="card-header">
-              <div class="row">
-                <div class="col-9">
-                    <span class="d-inline border border-primary rounded-circle">H</span>
-                    <p class="d-inline">Rashid@gmail.com</p>
-                </div>
+              {% comment %} hading of active poll {% endcomment %}
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-9">
+                      <span class="d-inline border border-primary rounded-circle">H</span>
+                      <p class="d-inline">{{poll.user}}</p>
+                  </div>
 
-                <div class="col-3">
-                    <p class="m-0">Posted on: </p>
-                    <p class="m-0">Ended on: </p>
+                  <div class="col-3">
+                      <p class="m-0">Posted on: {{poll.published_on}}</p>
+                      <p class="m-0">Ended on: {{poll.close_on}}</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
 
-            <div class="card-body">
-                <p class="card-text">Question paste here</p>
-                
+              <div class="card-body">
+                  <h5 class="card-text">{{poll.poll_question}}</h5>
 
-                {% comment %} iterate whole below div for choices{% endcomment %}
-                <div class="w-50">
-                  <canvas id="myChart"></canvas>
-                </div>
 
-            </div>     
-        </div>
+                  {% comment %} iterate whole below div for choices{% endcomment %}
+                  <div class="w-50">
+                    <canvas id="myChart{{poll.poll_id}}"></canvas>
+                  </div>
+
+              </div>     
+          </div>
+        {% endfor %}
 
     </div>
     
@@ -45,14 +47,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
-        const ctx = document.getElementById('myChart');
-        new Chart(ctx, {
+      {% for poll in poll_list %}
+        const ctx{{poll.poll_id}} = document.getElementById('myChart{{poll.poll_id}}');
+        new Chart(ctx{{poll.poll_id}}, {
           type: 'bar',
           data: {
-            labels: [1,2,3,4,5],
+            labels: [{% for choice in poll.choice %} '{{choice.choice_discription}}', {% endfor %}],
             datasets: [{
               label: '# of Votes',
-              data: [1,2,3,4,5],
+              data: [{% for choice in poll.choice %} {{choice.vote_count}}, {% endfor %}],
               borderWidth: 1
             }]
           },
@@ -64,6 +67,7 @@
             }
           }
         });
+      {% endfor %}
     </script>
 
 {% endblock homecontent %}
