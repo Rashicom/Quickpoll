@@ -282,7 +282,7 @@ class ClosedPolls(View):
 
         # fetching todays date to compare with the poll date
         date_now = datetime.now(self.time_zone).date()
-        polls = Polls.objects.filter(close_on__gte = date_now).prefetch_related('poll_choice_set')
+        polls = Polls.objects.filter(close_on__lt = date_now).prefetch_related('poll_choice_set')
         
         # creating a list of datas fron poll, choice and voting lists to show in the html
         poll_list = []
@@ -318,4 +318,68 @@ class ClosedPolls(View):
             # after all data is collected and created a new_poll, append it to the poll_list
             poll_list.append(new_poll)
        
-        return render(request, self.templet,{"poll_list":poll_list}) 
+        return render(request, self.templet,{"poll_list":poll_list})
+
+
+
+class MyPolls(View):
+
+    templet = "my_polling.html"
+    time_zone = pytz.timezone('Asia/Kolkata')
+
+    @method_decorator(login_required(login_url="login"))
+    def get(self, request):
+        """       
+        returns closed polling details
+        """
+
+        # fetching todays date to compare with the poll date
+        date_now = datetime.now(self.time_zone).date()
+        polls = Polls.objects.filter(user=request.user).prefetch_related('poll_choice_set')
+        
+        # creating a list of datas fron poll, choice and voting lists to show in the html
+        active_list = []
+        closed_list = []
+        for poll in polls:
+            
+            # creating a dict for for each polls with required values
+            new_poll = {
+                "user":poll.user,
+                "poll_id": poll.poll_id,
+                "poll_question": poll.poll_question,
+                "published_on":poll.published_on,
+                "close_on":poll.close_on,
+                "total_vote_count":poll.total_vote_count,
+                "choice":[]
+            }
+
+            for choice in poll.poll_choice_set.all():
+
+                # calculate percent
+                try:
+                    percent = (100/poll.total_vote_count) * choice.vote_count
+                except Exception as e:
+                    percent = 0
+
+                # appending choice details
+                new_poll["choice"].append({
+                    "pollchoice_id":choice.pollchoice_id,
+                    "choice_discription":choice.choice_discription,
+                    "vote_count":choice.vote_count,
+                    "percent":percent
+                })
+
+            # after all data is collected and created a new_poll, append it to the poll_list
+            # check the date with todays date
+            # if the closed date is passed , then add new_poll to the my_poll_list
+            # if the still poll is actived, then add new_poll to the poll_list
+            if poll.close_on >= date_now:
+                active_list.append(new_poll)
+                
+            elif poll.close_on < date_now:
+                closed_list.append(new_poll)
+            else:
+                print("cant check the date")
+        
+       
+        return render(request, self.templet,{"closed_list":closed_list,"active_list":active_list})

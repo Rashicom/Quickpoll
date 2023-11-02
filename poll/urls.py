@@ -9,5 +9,7 @@ urlpatterns = [
     path('logout/', views.UserLogout.as_view(),name="logout"),
     path('add_poll/', views.AddPoll.as_view(), name="add_poll"),
     path('vote/', views.Vote.as_view(), name="vote"),
+    path('my_poll/', views.MyPolls.as_view(), name="my_poll"),
 
 ]
+

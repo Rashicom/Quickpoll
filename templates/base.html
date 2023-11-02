@@ -36,7 +36,7 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">My pollings</a>
+            <a class="nav-link active" aria-current="page" href="{% url "my_poll" %}">My pollings</a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url "active_polling" %}">Active pollings</a>
@@ -59,7 +59,7 @@
 
 
 
-    <footer class="bg-light text-center text-lg-start fixed-bottom position-static">
+    <footer class="position-sticky bg-light text-center text-lg-start">
         <!-- Copyright -->
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
           © 2023 Copyright:
