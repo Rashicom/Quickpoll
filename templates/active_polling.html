@@ -72,7 +72,19 @@
 
                 {% comment %} iterate whole below div for choices{% endcomment %}
                 <div class="my-2 ">
-                    <a class="choiceoption" role="button" data-id="10">
+                    <a class="choiceoption" role="button" data-id="1" data-poll="20" >
+                        <div class="d-flex justify-content-between">
+                            <label for="choice" class="">Choice</label>
+                            <p class="d-inline">Vote count: 24</p>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuemin="0" aria-valuemax="100">50%</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="my-2 ">
+                    <a class="choiceoption" role="button" data-id="2" data-poll="20" >
                         <div class="d-flex justify-content-between">
                             <label for="choice" class="">Choice</label>
                             <p class="d-inline">Vote count: 24</p>
@@ -84,8 +96,11 @@
                 </div>
                 
 
-            </div>
+            </div>     
         </div>
+
+
+
 
     </div>
 
@@ -129,6 +144,12 @@
         $(".choiceoption").click(function(event){
             console.log("click")
             var choice_id = $(this).data('id')
+            var poll_id = $(this).data('poll')
+            
+            var data = {choice_id:choice_id, poll_id:poll_id,csrfmiddlewaretoken: '{{ csrf_token }}'}
+            console.log(data)
+
+            //ajax call for voting
             
         })
         

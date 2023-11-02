@@ -7,5 +7,5 @@ from django.views import View
 class test(View):
 
     def get(self,request):
-        return render(request,"active_polling.html")
+        return render(request,"results.html")
 
