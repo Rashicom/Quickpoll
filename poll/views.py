@@ -100,6 +100,20 @@ class SignUp(View):
 
 
 
+# logout user
+class UserLogout(View):
+
+    
+    def get(self, request):
+        """
+        clearing sessions and redirect to login
+        """
+
+        # logout and redirect to login page
+        logout(request)
+        return redirect('login')
+
+
 
 class Home(View):
 
