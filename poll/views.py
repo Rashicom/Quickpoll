@@ -167,7 +167,7 @@ class Home(View):
                     "pollchoice_id":choice.pollchoice_id,
                     "choice_discription":choice.choice_discription,
                     "vote_count":choice.vote_count,
-                    "percent":percent
+                    "percent":round(percent)
                 })
 
             poll_list.append(new_poll)
@@ -314,7 +314,7 @@ class ClosedPolls(View):
                     "pollchoice_id":choice.pollchoice_id,
                     "choice_discription":choice.choice_discription,
                     "vote_count":choice.vote_count,
-                    "percent":percent
+                    "percent":round(percent)
                 })
 
             # after all data is collected and created a new_poll, append it to the poll_list
