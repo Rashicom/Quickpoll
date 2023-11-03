@@ -1,0 +1,9 @@
+
+.choiceoption{
+    text-decoration: none;
+}
+
+.choiceoption:hover{
+    cursor: pointer;
+    font-size: large;
+}
