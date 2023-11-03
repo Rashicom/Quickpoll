@@ -1,6 +1,5 @@
 *.py[cod]
 
-*/migrations/
 */__pycache__/
 
 .vscode/
