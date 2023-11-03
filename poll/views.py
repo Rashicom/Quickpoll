@@ -140,8 +140,8 @@ class Home(View):
 
 
         date_now = datetime.now(self.time_zone).date()
-        # polls = Polls.objects.filter(close_on__gte = date_now).prefetch_related('poll_choice_set')
-        polls = Polls.objects.all().prefetch_related('poll_choice_set')
+        polls = Polls.objects.filter(close_on__gte = date_now).prefetch_related('poll_choice_set')
+        # polls = Polls.objects.all().prefetch_related('poll_choice_set')
         
         poll_list = []
         for poll in polls:
